@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# TODO: Put my aliases here
+alias hello="echo hello"

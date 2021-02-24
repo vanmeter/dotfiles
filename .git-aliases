@@ -1,0 +1,110 @@
+# Aliases
+alias g='git'
+alias gs='git status'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias gl='git pull'
+alias gup='git pull --rebase'
+alias gp='git push'
+alias gpff="git push -f"
+alias gpfl="git push --force-with-lease"
+alias gd='git diff'
+alias gc='git commit -v'
+alias gc!='git commit -v --amend'
+alias gca='git commit -v -a'
+alias gca!='git commit -v -a --amend --no-edit'
+alias gcmsg='git commit -m'
+alias gco='git checkout'
+alias gcm='git checkout master'
+alias gr='git remote'
+alias grv='git remote -v'
+alias grmv='git remote rename'
+alias grrm='git remote remove'
+alias grset='git remote set-url'
+alias grup='git remote update'
+alias grb='git rebase'
+alias grbi='git rebase -i'
+alias grbc='git rebase --continue'
+alias grba='git rebase --abort'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gcount='git shortlog -sn'
+alias gcl='git config --list'
+alias gcp='git cherry-pick'
+alias glg='git log --stat --max-count=10'
+alias glgg='git log --graph --max-count=10'
+alias glgga='git log --graph --decorate --all'
+alias glo='git log --oneline --decorate --color --stat'
+alias glog='git log --oneline --decorate --color --graph'
+alias gss='git status -s'
+alias ga='git add'
+alias gm='git merge'
+alias grh='git reset HEAD'
+alias grhh='git reset HEAD --hard'
+alias gclean='git reset --hard && git clean -d -f'
+alias gwc='git whatchanged -p --abbrev-commit --pretty=medium'
+
+#remove the gf alias
+#alias gf='git ls-files | grep'
+alias gf='git fetch --all'
+
+alias gpoat='git push origin --all && git push origin --tags'
+alias gmt='git mergetool --no-prompt'
+
+alias gg='git gui citool'
+alias gga='git gui citool --amend'
+alias gk='gitk --all --branches'
+
+alias gsts='git stash show --text'
+alias gsta='git stash'
+alias gstp='git stash pop'
+alias gstd='git stash drop'
+
+# Will cd into the top of the current repository
+# or submodule.
+alias grt='cd $(git rev-parse --show-toplevel || echo ".")'
+alias gls='git log --stat'
+
+# Git and svn mix
+alias git-svn-dcommit-push='git svn dcommit && git push github master:svntrunk'
+
+alias gsr='git svn rebase'
+alias gsd='git svn dcommit'
+
+# these alias commit and uncomit wip branches
+alias gwip='git add -A; git ls-files --deleted -z | xargs -r0 git rm; git commit -m "--wip--"'
+alias gunwip='git log -n 1 | grep -q -c "\-\-wip\-\-" && git reset HEAD~1'
+
+# these alias ignore changes to file
+alias gignore='git update-index --assume-unchanged'
+alias gunignore='git update-index --no-assume-unchanged'
+# list temporarily ignored files
+alias gignored='git ls-files -v | grep "^[[:lower:]]"'
+
+# Open the Pull Request URL for your current directory's branch (base branch defaults to master)
+function openpr() {
+  github_url=`git remote -v | awk '/fetch/{print $2}' | sed -Ee 's#(git@|git://)#https://#' -e 's@com:@com/@' -e 's%\.git$%%' | awk '/github/'`;
+  branch_name=`git symbolic-ref HEAD | cut -d"/" -f 3,4`;
+  pr_url=$github_url"/compare/master..."$branch_name"?expand=1"
+  open $pr_url;
+}
+
+# Run git push and then immediately open the Pull Request URL
+function gpr() {
+  git push origin HEAD -u
+
+  if [ $? -eq 0 ]; then
+    openpr
+  else
+    echo 'failed to push commits and open a pull request.';
+  fi
+}
+
+function pulls() {
+  open "https://github.com/pulls"
+}
+
+# Git branch name copy
+alias gbnc='git rev-parse --abbrev-ref HEAD | pbcopy'
+
+alias grom='gco master && gl && gco - && git rebase origin/master'
